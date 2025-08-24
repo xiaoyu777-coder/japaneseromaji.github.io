@@ -1,2 +1,2 @@
-# japaneseromaji.github.io
+# japanese-romaji
 Japanese Romaji Converter.
