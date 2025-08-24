@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日语罗马音转换器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans SC', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #fff5e6, #ffe6e6, #e6f2ff);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .header {
+            background: linear-gradient(to right, #d7003a, #8e354a);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: #d7003a;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        
+        label {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        label i {
+            margin-right: 10px;
+            color: #d7003a;
+        }
+        
+        input {
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #d7003a;
+            box-shadow: 0 0 0 3px rgba(215, 0, 58, 0.2);
+        }
+        
+        .result-container {
+            background: #f8f4f0;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e8d5c4;
+        }
+        
+        .result-title {
+            display: flex;
+            align-items: center;
+            color: #8e354a;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .result-title i {
+            margin-right: 10px;
+        }
+        
+        .result {
+            min-height: 100px;
+            font-size: 2.5rem;
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .result-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            background: #fff9f9;
+            border-radius: 12px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            min-width: 200px;
+        }
+        
+        .result-label {
+            font-size: 1rem;
+            color: #d7003a;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .result-text {
+            font-size: 2.2rem;
+            line-height: 1.3;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            flex: 1;
+            min-width: 150px;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        button i {
+            margin-right: 10px;
+        }
+        
+        .convert-btn {
+            background: linear-gradient(to right, #0068b7, #004c8c);
+            color: white;
+        }
+        
+        .convert-btn:hover {
+            background: linear-gradient(to right, #0057a3, #003d75);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 104, 183, 0.3);
+        }
+        
+        .clear-btn {
+            background: linear-gradient(to right, #f7c242, #e6a00d);
+            color: white;
+        }
+        
+        .clear-btn:hover {
+            background: linear-gradient(to right, #e6b02c, #d69400);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(247, 194, 66, 0.3);
+        }
+        
+        .speak-btn {
+            background: linear-gradient(to right, #00a381, #00896c);
+            color: white;
+        }
+        
+        .speak-btn:hover {
+            background: linear-gradient(to right, #009272, #00715a);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 163, 129, 0.3);
+        }
+        
+        .examples {
+            margin-top: 40px;
+            background: #f0f7ff;
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #d1e4f5;
+        }
+        
+        .examples h3 {
+            color: #0068b7;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .examples h3 i {
+            margin-right: 10px;
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        
+        .example-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+        
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            border-color: #d7003a;
+        }
+        
+        .example-card .romaji {
+            color: #d7003a;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .example-card .japanese {
+            font-size: 1.8rem;
+            text-align: center;
+            margin: 12px 0;
+            line-height: 1.4;
+        }
+        
+        .example-card .meaning {
+            color: #666;
+            font-size: 1rem;
+            text-align: center;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            background: #f9f9f9;
+        }
+        
+        .decoration {
+            position: absolute;
+            z-index: 1;
+            opacity: 0.08;
+            font-size: 10rem;
+            color: #8e354a;
+            font-weight: bold;
+        }
+        
+        .dec-1 {
+            top: 5%;
+            left: 5%;
+            transform: rotate(-20deg);
+        }
+        
+        .dec-2 {
+            top: 10%;
+            right: 10%;
+            transform: rotate(15deg);
+        }
+        
+        .dec-3 {
+            bottom: 10%;
+            left: 10%;
+            transform: rotate(10deg);
+        }
+        
+        .dec-4 {
+            bottom: 15%;
+            right: 15%;
+            transform: rotate(-15deg);
+        }
+        
+        .instructions {
+            background: #f9f4e9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            border-left: 4px solid #f7c242;
+        }
+        
+        .instructions h3 {
+            color: #8e354a;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .instructions h3 i {
+            margin-right: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 25px;
+            margin-top: 10px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            .result {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .result-item {
+                width: 100%;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .examples-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .decoration {
+                font-size: 6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 装饰元素 -->
+    <div class="decoration dec-1">日本語</div>
+    <div class="decoration dec-2">あいうえお</div>
+    <div class="decoration dec-3">アイウエオ</div>
+    <div class="decoration dec-4">ローマ字</div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>日语罗马音转换器</h1>
+            <p>输入罗马音，实时转换为平假名和片假名。支持常用日语短语的转换。</p>
+        </div>
+        
+        <div class="content">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="romaji-input"><i class="fas fa-keyboard"></i> 请输入罗马音</label>
+                    <input type="text" id="romaji-input" placeholder="例如: konnichiwa, arigatou, ohayougozaimasu" autocomplete="off">
+                </div>
+                
+                <div class="controls">
+                    <button class="convert-btn" id="convert-btn">
+                        <i class="fas fa-exchange-alt"></i> 转换
+                    </button>
+                    <button class="clear-btn" id="clear-btn">
+                        <i class="fas fa-eraser"></i> 清空
+                    </button>
+                    <button class="speak-btn" id="speak-btn">
+                        <i class="fas fa-volume-up"></i> 发音
+                    </button>
+                </div>
+            </div>
+            
+            <div class="result-container">
+                <div class="result-title">
+                    <i class="fas fa-language"></i> 转换结果
+                </div>
+                <div class="result" id="result">
+                    <div class="result-item">
+                        <div class="result-label">平假名</div>
+                        <div class="result-text">ここに結果が表示されます</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">片假名</div>
+                        <div class="result-text">ココニケッカガヒョウジサレマス</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="instructions">
+                <h3><i class="fas fa-info-circle"></i> 使用说明</h3>
+                <ul>
+                    <li>在输入框中输入日语罗马音（例如: konnichiwa）</li>
+                    <li>点击"转换"按钮或按Enter键查看平假名和片假名</li>
+                    <li>点击"发音"按钮可以听取发音（模拟）</li>
+                    <li>点击下方示例卡片可快速输入常用短语</li>
+                </ul>
+            </div>
+            
+            <div class="examples">
+                <h3><i class="fas fa-lightbulb"></i> 常用日语短语示例</h3>
+                <div class="examples-grid">
+                    <div class="example-card" data-romaji="konnichiwa">
+                        <div class="romaji">konnichiwa</div>
+                        <div class="japanese">こんにちは</div>
+                        <div class="meaning">你好</div>
+                    </div>
+                    <div class="example-card" data-romaji="arigatou">
+                        <div class="romaji">arigatou</div>
+                        <div class="japanese">ありがとう</div>
+                        <div class="meaning">谢谢</div>
+                    </div>
+                    <div class="example-card" data-romaji="ohayou">
+                        <div class="romaji">ohayou</div>
+                        <div class="japanese">おはよう</div>
+                        <div class="meaning">早上好</div>
+                    </div>
+                    <div class="example-card" data-romaji="sayonara">
+                        <div class="romaji">sayonara</div>
+                        <div class="japanese">さようなら</div>
+                        <div class="meaning">再见</div>
+                    </div>
+                    <div class="example-card" data-romaji="sumimasen">
+                        <div class="romaji">sumimasen</div>
+                        <div class="japanese">すみません</div>
+                        <div class="meaning">对不起/打扰一下</div>
+                    </div>
+                    <div class="example-card" data-romaji="daijoubu">
+                        <div class="romaji">daijoubu</div>
+                        <div class="japanese">だいじょうぶ</div>
+                        <div class="meaning">没关系/没问题</div>
+                    </div>
+                    <div class="example-card" data-romaji="wakarimashita">
+                        <div class="romaji">wakarimashita</div>
+                        <div class="japanese">わかりました</div>
+                        <div class="meaning">明白了</div>
+                    </div>
+                    <div class="example-card" data-romaji="itadakimasu">
+                        <div class="romaji">itadakimasu</div>
+                        <div class="japanese">いただきます</div>
+                        <div class="meaning">我开动了</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2023 日语罗马音转换器 | 平假名・片假名转换工具</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const romajiInput = document.getElementById('romaji-input');
+            const convertBtn = document.getElementById('convert-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const speakBtn = document.getElementById('speak-btn');
+            const resultDiv = document.getElementById('result');
+            const exampleCards = document.querySelectorAll('.example-card');
+            
+            // 罗马音到假名的转换映射
+            const romajiToKana = {
+                'a': ['あ', 'ア'],
+                'i': ['い', 'イ'],
+                'u': ['う', 'ウ'],
+                'e': ['え', 'エ'],
+                'o': ['お', 'オ'],
+                'ka': ['か', 'カ'],
+                'ki': ['き', 'キ'],
+                'ku': ['く', 'ク'],
+                'ke': ['け', 'ケ'],
+                'ko': ['こ', 'コ'],
+                'sa': ['さ', 'サ'],
+                'shi': ['し', 'シ'],
+                'su': ['す', 'ス'],
+                'se': ['せ', 'セ'],
+                'so': ['そ', 'ソ'],
+                'ta': ['た', 'タ'],
+                'chi': ['ち', 'チ'],
+                'tsu': ['つ', 'ツ'],
+                'te': ['て', 'テ'],
+                'to': ['と', 'ト'],
+                'na': ['な', 'ナ'],
+                'ni': ['に', 'ニ'],
+                'nu': ['ぬ', 'ヌ'],
+                'ne': ['ね', 'ネ'],
+                'no': ['の', 'ノ'],
+                'ha': ['は', 'ハ'],
+                'hi': ['ひ', 'ヒ'],
+                'fu': ['ふ', 'フ'],
+                'he': ['へ', 'ヘ'],
+                'ho': ['ほ', 'ホ'],
+                'ma': ['ま', 'マ'],
+                'mi': ['み', 'ミ'],
+                'mu': ['む', 'ム'],
+                'me': ['め', 'メ'],
+                'mo': ['も', 'モ'],
+                'ya': ['や', 'ヤ'],
+                'yu': ['ゆ', 'ユ'],
+                'yo': ['よ', 'ヨ'],
+                'ra': ['ら', 'ラ'],
+                'ri': ['り', 'リ'],
+                'ru': ['る', 'ル'],
+                're': ['れ', 'レ'],
+                'ro': ['ろ', 'ロ'],
+                'wa': ['わ', 'ワ'],
+                'wo': ['を', 'ヲ'],
+                'n': ['ん', 'ン'],
+                'ga': ['が', 'ガ'],
+                'gi': ['ぎ', 'ギ'],
+                'gu': ['ぐ', 'グ'],
+                'ge': ['げ', 'ゲ'],
+                'go': ['ご', 'ゴ'],
+                'za': ['ざ', 'ザ'],
+                'ji': ['じ', 'ジ'],
+                'zu': ['ず', 'ズ'],
+                'ze': ['ぜ', 'ゼ'],
+                'zo': ['ぞ', 'ゾ'],
+                'da': ['だ', 'ダ'],
+                'ji': ['ぢ', 'ヂ'],
+                'zu': ['づ', 'ヅ'],
+                'de': ['で', 'デ'],
+                'do': ['ど', 'ド'],
+                'ba': ['ば', 'バ'],
+                'bi': ['び', 'ビ'],
+                'bu': ['ぶ', 'ブ'],
+                'be': ['べ', 'ベ'],
+                'bo': ['ぼ', 'ボ'],
+                'pa': ['ぱ', 'パ'],
+                'pi': ['ぴ', 'ピ'],
+                'pu': ['ぷ', 'プ'],
+                'pe': ['ぺ', 'ペ'],
+                'po': ['ぽ', 'ポ'],
+                'kya': ['きゃ', 'キャ'],
+                'kyu': ['きゅ', 'キュ'],
+                'kyo': ['きょ', 'キョ'],
+                'sha': ['しゃ', 'シャ'],
+                'shu': ['しゅ', 'シュ'],
+                'sho': ['しょ', 'ショ'],
+                'cha': ['ちゃ', 'チャ'],
+                'chu': ['ちゅ', 'チュ'],
+                'cho': ['ちょ', 'チョ'],
+                'nya': ['にゃ', 'ニャ'],
+                'nyu': ['にゅ', 'ニュ'],
+                'nyo': ['にょ', 'ニョ'],
+                'hya': ['ひゃ', 'ヒャ'],
+                'hyu': ['ひゅ', 'ヒュ'],
+                'hyo': ['ひょ', 'ヒョ'],
+                'mya': ['みゃ', 'ミャ'],
+                'myu': ['みゅ', 'ミュ'],
+                'myo': ['みょ', 'ミョ'],
+                'rya': ['りゃ', 'リャ'],
+                'ryu': ['りゅ', 'リュ'],
+                'ryo': ['りょ', 'リョ'],
+                'gya': ['ぎゃ', 'ギャ'],
+                'gyu': ['ぎゅ', 'ギュ'],
+                'gyo': ['ぎょ', 'ギョ'],
+                'ja': ['じゃ', 'ジャ'],
+                'ju': ['じゅ', 'ジュ'],
+                'jo': ['じょ', 'ジョ'],
+                'bya': ['びゃ', 'ビャ'],
+                'byu': ['びゅ', 'ビュ'],
+                'byo': ['びょ', 'ビョ'],
+                'pya': ['ぴゃ', 'ピャ'],
+                'pyu': ['ぴゅ', 'ピュ'],
+                'pyo': ['ぴょ', 'ピョ']
+            };
+            
+            // 短语转换（特殊转换）
+            const phraseConversions = {
+                'konnichiwa': ['こんにちは', 'コンニチハ'],
+                'ohayou': ['おはよう', 'オハヨウ'],
+                'ohayougozaimasu': ['おはようございます', 'オハヨウゴザイマス'],
+                'konbanwa': ['こんばんは', 'コンバンワ'],
+                'oyasumi': ['おやすみ', 'オヤスミ'],
+                'oyasuminasai': ['おやすみなさい', 'オヤスミナサイ'],
+                'arigatou': ['ありがとう', 'アリガトウ'],
+                'arigatougozaimasu': ['ありがとうございます', 'アリガトウゴザイマス'],
+                'sumimasen': ['すみません', 'スミマセン'],
+                'gomennasai': ['ごめんなさい', 'ゴメンナサイ'],
+                'onegai': ['おねがい', 'オネガイ'],
+                'onegaishimasu': ['お願いします', 'オネガイシマス'],
+                'douitashimashite': ['どういたしまして', 'ドウイタシマシテ'],
+                'itadakimasu': ['いただきます', 'イタダキマス'],
+                'gochisousama': ['ごちそうさま', 'ゴチソウサマ'],
+                'daijoubu': ['だいじょうぶ', 'ダイジョウブ'],
+                'ganbatte': ['がんばって', 'ガンバッテ'],
+                'omedetou': ['おめでとう', 'オメデトウ'],
+                'yoroshiku': ['よろしく', 'ヨロシク'],
+                'sayonara': ['さようなら', 'サヨウナラ'],
+                'jaane': ['じゃあね', 'ジャアネ'],
+                'matane': ['またね', 'マタネ'],
+                'wakarimashita': ['わかりました', 'ワカリマシタ'],
+                'wakarimasen': ['わかりません', 'ワカリマセン'],
+                'tasukete': ['たすけて', 'タスケテ'],
+                'kiotsukete': ['きをつけて', 'キオツケテ'],
+                'tadaima': ['ただいま', 'タダイマ'],
+                'okaeri': ['おかえり', 'オカエリ'],
+                'ittekimasu': ['いってきます', 'イッテキマス'],
+                'itterasshai': ['いってらっしゃい', 'イッテラッシャイ'],
+                'chottomatte': ['ちょっとまって', 'チョットマッテ'],
+                'hai': ['はい', 'ハイ'],
+                'iie': ['いいえ', 'イイエ'],
+                'suki': ['すき', 'スキ'],
+                'daisuki': ['だいすき', 'ダイスキ'],
+                'aishiteru': ['あいしてる', 'アイシテル'],
+                'gomen': ['ごめん', 'ゴメン'],
+                'baka': ['ばか', 'バカ'],
+                'urusai': ['うるさい', 'ウルサイ']
+            };
+            
+            // 转换函数
+            function convertRomaji(romaji) {
+                romaji = romaji.toLowerCase().trim();
+                
+                // 检查短语转换
+                if (phraseConversions[romaji]) {
+                    return phraseConversions[romaji];
+                }
+                
+                // 特殊转换（长音、促音等）
+                if (romaji.includes('ou')) {
+                    romaji = romaji.replace(/ou/g, 'ō');
+                }
+                if (romaji.includes('uu')) {
+                    romaji = romaji.replace(/uu/g, 'ū');
+                }
+                
+                // 分割单词转换
+                const words = romaji.split(/\s+/);
+                const hiraganaResult = [];
+                const katakanaResult = [];
+                
+                for (const word of words) {
+                    let hiraWord = '';
+                    let kataWord = '';
+                    let i = 0;
+                    
+                    while (i < word.length) {
+                        let found = false;
+                        
+                        // 尝试3个字符的转换
+                        if (i + 2 < word.length) {
+                            const threeChar = word.substring(i, i + 3);
+                            if (romajiToKana[threeChar]) {
+                                hiraWord += romajiToKana[threeChar][0];
+                                kataWord += romajiToKana[threeChar][1];
+                                i += 3;
+                                found = true;
+                            }
+                        }
+                        
+                        // 尝试2个字符的转换
+                        if (!found && i + 1 < word.length) {
+                            const twoChar = word.substring(i, i + 2);
+                            if (romajiToKana[twoChar]) {
+                                hiraWord += romajiToKana[twoChar][0];
+                                kataWord += romajiToKana[twoChar][1];
+                                i += 2;
+                                found = true;
+                            }
+                        }
+                        
+                        // 尝试1个字符的转换
+                        if (!found) {
+                            const oneChar = word[i];
+                            if (romajiToKana[oneChar]) {
+                                hiraWord += romajiToKana[oneChar][0];
+                                kataWord += romajiToKana[oneChar][1];
+                                i++;
+                            } else {
+                                // 无法转换的字符原样显示
+                                hiraWord += oneChar;
+                                kataWord += oneChar;
+                                i++;
+                            }
+                        }
+                    }
+                    
+                    hiraganaResult.push(hiraWord);
+                    katakanaResult.push(kataWord);
+                }
+                
+                return [
+                    hiraganaResult.join(' '),
+                    katakanaResult.join(' ')
+                ];
+            }
+            
+            // 显示结果
+            function displayResult(romaji) {
+                if (!romaji) {
+                    resultDiv.innerHTML = `
+                        <div class="result-item">
+                            <div class="result-label">平假名</div>
+                            <div class="result-text">ここに結果が表示されます</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">片假名</div>
+                            <div class="result-text">ココニケッカガヒョウジサレマス</div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const [hiragana, katakana] = convertRomaji(romaji);
+                
+                resultDiv.innerHTML = `
+                    <div class="result-item">
+                        <div class="result-label">平假名</div>
+                        <div class="result-text">${hiragana}</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">片假名</div>
+                        <div class="result-text">${katakana}</div>
+                    </div>
+                `;
+            }
+            
+            // 发音功能
+            function speakJapanese() {
+                const romaji = romajiInput.value.trim();
+                if (!romaji) return;
+                
+                const [hiragana] = convertRomaji(romaji);
+                
+                // 实际应用中可以使用Web Speech API
+                alert(`发音: ${hiragana}\n\n（在实际应用中，这里会播放发音）`);
+            }
+            
+            // 事件监听
+            convertBtn.addEventListener('click', () => {
+                displayResult(romajiInput.value);
+            });
+            
+            romajiInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') {
+                    displayResult(romajiInput.value);
+                }
+            });
+            
+            clearBtn.addEventListener('click', () => {
+                romajiInput.value = '';
+                displayResult('');
+                romajiInput.focus();
+            });
+            
+            speakBtn.addEventListener('click', speakJapanese);
+            
+            // 示例卡片点击事件
+            exampleCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const romaji = card.getAttribute('data-romaji');
+                    romajiInput.value = romaji;
+                    displayResult(romaji);
+                });
+            });
+            
+            // 页面加载时聚焦输入框
+            romajiInput.focus();
+        });
+    </script>
+</body>
+</html>
